@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Freedom Fighters & Independence Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #ff9933 0%, #ffffff 50%, #138808 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .quiz-container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 650px;
+            overflow: hidden;
+        }
+        
+        .quiz-header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .quiz-title {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            color: #ff9933;
+        }
+        
+        .quiz-theme {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+        
+        .progress-container {
+            background: rgba(255, 255, 255, 0.3);
+            height: 8px;
+            border-radius: 4px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            width: 10%;
+            background: #138808;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        .question-count {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .quiz-body {
+            padding: 25px;
+        }
+        
+        .question-text {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        
+        .option {
+            padding: 15px;
+            border: 2px solid #e6e6e6;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option:hover {
+            border-color: #2c3e50;
+            background: #f5f8ff;
+        }
+        
+        .option.selected {
+            border-color: #2c3e50;
+            background: #e6eeff;
+        }
+        
+        .option.correct {
+            border-color: #27ae60;
+            background: #d5f5e3;
+        }
+        
+        .option.incorrect {
+            border-color: #e74c3c;
+            background: #fadbd8;
+        }
+        
+        .option-letter {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 28px;
+            height: 28px;
+            background: #f0f0f0;
+            border-radius: 50%;
+            margin-right: 12px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .option.selected .option-letter {
+            background: #2c3e50;
+            color: white;
+        }
+        
+        .option.correct .option-letter {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .option.incorrect .option-letter {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .prev-btn {
+            background: #f0f0f0;
+            color: #555;
+        }
+        
+        .prev-btn:hover {
+            background: #e0e0e0;
+        }
+        
+        .next-btn {
+            background: #2c3e50;
+            color: white;
+        }
+        
+        .next-btn:hover {
+            background: #1a252f;
+        }
+        
+        .submit-btn {
+            background: #138808;
+            color: white;
+        }
+        
+        .submit-btn:hover {
+            background: #0c5e05;
+        }
+        
+        button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+        
+        .results-container {
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .score-text {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .score-value {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #138808;
+            margin-bottom: 10px;
+        }
+        
+        .score-message {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #555;
+        }
+        
+        .review-container {
+            text-align: left;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 10px;
+        }
+        
+        .review-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .review-question {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .review-answer {
+            color: #27ae60;
+        }
+        
+        .review-incorrect {
+            color: #e74c3c;
+        }
+        
+        .restart-btn {
+            background: #ff9933;
+            color: white;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            margin-top: 20px;
+        }
+        
+        .restart-btn:hover {
+            background: #e08928;
+        }
+        
+        .leader-image {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 10px;
+            margin: 15px auto;
+            display: block;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .fact-box {
+            background: #f0f8ff;
+            border-left: 4px solid #ff9933;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 500px) {
+            .quiz-body {
+                padding: 20px;
+            }
+            
+            .question-text {
+                font-size: 1.1rem;
+            }
+            
+            button {
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="quiz-header">
+            <h1 class="quiz-title">Indian Freedom Fighters & Independence Quiz</h1>
+            <div class="quiz-theme">Test your knowledge of India's struggle for independence</div>
+            <div class="progress-container">
+                <div class="progress-bar"></div>
+            </div>
+            <div class="question-count">Question 1 of 10</div>
+        </div>
+        
+        <div class="quiz-body">
+            <h2 class="question-text">Who is known as the Father of the Indian Nation?</h2>
+            
+            <div class="options-container">
+                <div class="option">
+                    <span class="option-letter">A</span>
+                    <span class="option-text">Jawaharlal Nehru</span>
+                </div>
+                
+                <div class="option">
+                    <span class="option-letter">B</span>
+                    <span class="option-text">Mahatma Gandhi</span>
+                </div>
+                
+                <div class="option">
+                    <span class="option-letter">C</span>
+                    <span class="option-text">Subhas Chandra Bose</span>
+                </div>
+                
+                <div class="option">
+                    <span class="option-letter">D</span>
+                    <span class="option-text">Bhagat Singh</span>
+                </div>
+            </div>
+            
+            <div class="navigation-buttons">
+                <button class="prev-btn" disabled>Previous</button>
+                <button class="next-btn" disabled>Next Question</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const quizContainer = document.querySelector('.quiz-container');
+            const options = document.querySelectorAll('.option');
+            const nextBtn = document.querySelector('.next-btn');
+            const prevBtn = document.querySelector('.prev-btn');
+            const progressBar = document.querySelector('.progress-bar');
+            const questionCount = document.querySelector('.question-count');
+            const questionText = document.querySelector('.question-text');
+            const optionsContainer = document.querySelector('.options-container');
+            
+            let currentQuestion = 1;
+            const totalQuestions = 10;
+            let userAnswers = new Array(totalQuestions).fill(null);
+            let score = 0;
+            
+            // Quiz questions data with correct answers
+            const quizQuestions = [
+                {
+                    question: "Who is known as the Father of the Indian Nation?",
+                    options: [
+                        "Jawaharlal Nehru",
+                        "Mahatma Gandhi",
+                        "Subhas Chandra Bose",
+                        "Bhagat Singh"
+                    ],
+                    correctAnswer: 1, // 0-based index (B is index 1)
+                    fact: "Mahatma Gandhi led the non-violent civil disobedience movement against British rule and is revered as the Father of the Nation."
+                },
+                {
+                    question: "Who founded the Indian National Army (INA) to fight against British rule?",
+                    options: [
+                        "Chandra Shekhar Azad",
+                        "Subhas Chandra Bose",
+                        "Lala Lajpat Rai",
+                        "Bal Gangadhar Tilak"
+                    ],
+                    correctAnswer: 1,
+                    fact: "Subhas Chandra Bose, also known as Netaji, formed the Indian National Army (Azad Hind Fauj) with Japanese support during World War II."
+                },
+                {
+                    question: "Who was the first Prime Minister of independent India?",
+                    options: [
+                        "Sardar Vallabhbhai Patel",
+                        "Jawaharlal Nehru",
+                        "Rajendra Prasad",
+                        "Lal Bahadur Shastri"
+                    ],
+                    correctAnswer: 1,
+                    fact: "Jawaharlal Nehru served as India's first Prime Minister from 1947 until his death in 1964."
+                },
+                {
+                    question: "Who is known as the 'Iron Man of India'?",
+                    options: [
+                        "Jawaharlal Nehru",
+                        "Bhagat Singh",
+                        "Sardar Vallabhbhai Patel",
+                        "Bal Gangadhar Tilak"
+                    ],
+                    correctAnswer: 2,
+                    fact: "Sardar Vallabhbhai Patel was instrumental in integrating over 500 princely states into the Indian Union after independence."
+                },
+                {
+                    question: "Who shot General Dyer in retaliation for the Jallianwala Bagh massacre?",
+                    options: [
+                        "Bhagat Singh",
+                        "Udham Singh",
+                        "Chandra Shekhar Azad",
+                        "Ram Prasad Bismil"
+                    ],
+                    correctAnswer: 1,
+                    fact: "Udham Singh assassinated Michael O'Dwyer in London in 1940, who was the Lieutenant Governor of Punjab during the Jallianwala Bagh massacre."
+                },
+                {
+                    question: "Who was the first woman president of the Indian National Congress?",
+                    options: [
+                        "Sarojini Naidu",
+                        "Annie Besant",
+                        "Vijaya Lakshmi Pandit",
+                        "Aruna Asaf Ali"
+                    ],
+                    correctAnswer: 1,
+                    fact: "Annie Besant, a British socialist and women's rights activist, became the first woman president of the Indian National Congress in 1917."
+                },
+                {
+                    question: "Who gave the slogan 'Swaraj is my birthright and I shall have it'?",
+                    options: [
+                        "Mahatma Gandhi",
+                        "Bal Gangadhar Tilak",
+                        "Bipin Chandra Pal",
+                        "Lala Lajpat Rai"
+                    ],
+                    correctAnswer: 1,
+                    fact: "Bal Gangadhar Tilak was one of the first and strongest advocates of 'Swaraj' (self-rule) and a key leader of the Indian independence movement."
+                },
+                {
+                    question: "Who was known as 'Punjab Kesari' (Lion of Punjab)?",
+                    options: [
+                        "Lala Lajpat Rai",
+                        "Bhagat Singh",
+                        "Udham Singh",
+                        "Sukhdev Thapar"
+                    ],
+                    correctAnswer: 0,
+                    fact: "Lala Lajpat Rai was a prominent nationalist leader who played an important role in India's struggle for independence."
+                },
+                {
+                    question: "Who was the first Indian woman to become President of the Indian National Congress?",
+                    options: [
+                        "Annie Besant",
+                        "Sarojini Naidu",
+                        "Indira Gandhi",
+                        "Vijaya Lakshmi Pandit"
+                    ],
+                    correctAnswer: 1,
+                    fact: "Sarojini Naidu, also known as the 'Nightingale of India', was the first Indian woman to become President of the Indian National Congress in 1925."
+                },
+                {
+                    question: "On which date did India gain independence from British rule?",
+                    options: [
+                        "January 26, 1930",
+                        "August 15, 1947",
+                        "January 26, 1950",
+                        "August 15, 1950"
+                    ],
+                    correctAnswer: 1,
+                    fact: "India gained independence from British rule on August 15, 1947, after nearly 200 years of colonial rule."
+                }
+            ];
+            
+            // Update progress bar
+            function updateProgress() {
+                const progress = ((currentQuestion) / totalQuestions) * 100;
+                progressBar.style.width = `${progress}%`;
+            }
+            
+            // Load question
+            function loadQuestion() {
+                questionText.textContent = quizQuestions[currentQuestion - 1].question;
+                questionCount.textContent = `Question ${currentQuestion} of ${totalQuestions}`;
+                
+                const optionTexts = document.querySelectorAll('.option-text');
+                for (let i = 0; i < 4; i++) {
+                    optionTexts[i].textContent = quizQuestions[currentQuestion - 1].options[i];
+                }
+                
+                // Clear previous selection
+                options.forEach(option => {
+                    option.classList.remove('selected', 'correct', 'incorrect');
+                });
+                
+                // If user previously selected an option for this question, restore it
+                if (userAnswers[currentQuestion - 1] !== null) {
+                    options[userAnswers[currentQuestion - 1]].classList.add('selected');
+                    nextBtn.disabled = false;
+                } else {
+                    nextBtn.disabled = true;
+                }
+                
+                // Update button states
+                prevBtn.disabled = currentQuestion === 1;
+                
+                // Update button text if last question
+                if (currentQuestion === totalQuestions) {
+                    nextBtn.textContent = "Submit Quiz";
+                    nextBtn.classList.add('submit-btn');
+                    nextBtn.classList.remove('next-btn');
+                } else {
+                    nextBtn.textContent = "Next Question";
+                    nextBtn.classList.remove('submit-btn');
+                    nextBtn.classList.add('next-btn');
+                }
+                
+                updateProgress();
+            }
+            
+            // Select option
+            options.forEach((option, index) => {
+                option.addEventListener('click', function() {
+                    // Remove selected class from all options
+                    options.forEach(opt => opt.classList.remove('selected'));
+                    
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                    
+                    // Store the answer
+                    userAnswers[currentQuestion - 1] = index;
+                    
+                    // Enable next button
+                    nextBtn.disabled = false;
+                });
+            });
+            
+            // Next button functionality
+            nextBtn.addEventListener('click', function() {
+                if (currentQuestion < totalQuestions) {
+                    currentQuestion++;
+                    loadQuestion();
+                } else {
+                    // Show results
+                    showResults();
+                }
+            });
+            
+            // Previous button functionality
+            prevBtn.addEventListener('click', function() {
+                if (currentQuestion > 1) {
+                    currentQuestion--;
+                    loadQuestion();
+                }
+            });
+            
+            // Show results
+            function showResults() {
+                // Calculate score
+                score = 0;
+                for (let i = 0; i < totalQuestions; i++) {
+                    if (userAnswers[i] === quizQuestions[i].correctAnswer) {
+                        score++;
+                    }
+                }
+                
+                // Generate review content
+                let reviewContent = '';
+                for (let i = 0; i < totalQuestions; i++) {
+                    const userAnswerIndex = userAnswers[i];
+                    const correctAnswerIndex = quizQuestions[i].correctAnswer;
+                    
+                    reviewContent += `
+                        <div class="review-item">
+                            <div class="review-question">${i+1}. ${quizQuestions[i].question}</div>
+                            <div class="review-answer">Correct answer: ${quizQuestions[i].options[correctAnswerIndex]}</div>
+                    `;
+                    
+                    if (userAnswerIndex !== null) {
+                        if (userAnswerIndex === correctAnswerIndex) {
+                            reviewContent += `<div class="review-answer">Your answer: ${quizQuestions[i].options[userAnswerIndex]} ✓</div>`;
+                        } else {
+                            reviewContent += `<div class="review-incorrect">Your answer: ${quizQuestions[i].options[userAnswerIndex]} ✗</div>`;
+                        }
+                    } else {
+                        reviewContent += `<div class="review-incorrect">You did not answer this question</div>`;
+                    }
+                    
+                    reviewContent += `<div class="fact-box">${quizQuestions[i].fact}</div></div>`;
+                }
+                
+                // Determine message based on score
+                let message = '';
+                if (score >= 9) {
+                    message = "Excellent! You're a true expert on India's freedom struggle!";
+                } else if (score >= 7) {
+                    message = "Great job! You have good knowledge of Indian history.";
+                } else if (score >= 5) {
+                    message = "Good effort! You know the basics of India's independence movement.";
+                } else {
+                    message = "Keep learning! India's freedom struggle has many inspiring stories.";
+                }
+                
+                const resultsHTML = `
+                    <div class="results-container">
+                        <h2 class="score-text">Your Quiz Results</h2>
+                        <div class="score-value">${score}/${totalQuestions}</div>
+                        <div class="score-message">${message}</div>
+                        
+                        <div class="review-container">
+                            <h3>Question Review</h3>
+                            ${reviewContent}
+                        </div>
+                        
+                        <button class="restart-btn" onclick="location.reload()">Take Quiz Again</button>
+                    </div>
+                `;
+                
+                quizContainer.querySelector('.quiz-body').innerHTML = resultsHTML;
+                quizContainer.querySelector('.quiz-header').style.display = 'none';
+            }
+            
+            // Initialize the quiz
+            loadQuestion();
+        });
+    </script>
+</body>
+</html>
