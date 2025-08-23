@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobBoard - Find Your Dream Job</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #3b82f6;
+            --secondary: #2563eb;
+            --accent: #10b981;
+            --light: #f3f4f6;
+            --dark: #1f2937;
+            --gray: #6b7280;
+        }
+        
+        body {
+            background-color: #f9fafb;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .logo span {
+            color: var(--secondary);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 25px;
+            position: relative;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        
+        nav ul li a i {
+            margin-left: 5px;
+            font-size: 0.8rem;
+        }
+        
+        nav ul li a:hover {
+            color: var(--primary);
+        }
+        
+        .auth-buttons {
+            display: flex;
+            align-items: center;
+        }
+        
+        .login-btn {
+            margin-right: 15px;
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .post-job-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .post-job-btn:hover {
+            background-color: var(--secondary);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(to right, #4f46e5, #3b82f6);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .stat-item {
+            margin: 0 20px;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+        
+        /* Search Form */
+        .search-form {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+        
+        .form-group {
+            position: relative;
+        }
+        
+        .form-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: 1px solid #e5e7eb;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .search-btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .search-btn:hover {
+            background-color: #0da271;
+        }
+        
+        /* Job Listings */
+        .job-listings {
+            padding: 60px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .section-title h2 {
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+        
+        .section-title p {
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .jobs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .job-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .job-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .company-logo {
+            width: 50px;
+            height: 50px;
+            background-color: var(--light);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .job-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .job-info .company {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .job-details {
+            margin-bottom: 20px;
+        }
+        
+        .job-details .location, .job-details .salary {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .job-details i {
+            margin-right: 8px;
+            color: var(--primary);
+        }
+        
+        .job-tags {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        
+        .tag {
+            background-color: var(--light);
+            color: var(--dark);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .apply-btn {
+            display: block;
+            text-align: center;
+            background-color: var(--primary);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .apply-btn:hover {
+            background-color: var(--secondary);
+        }
+        
+        /* Job Detail Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 800px;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 60px 0 30px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 40px;
+            height: 3px;
+            background-color: var(--accent);
+        }
+        
+        .footer-column p {
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-column ul li a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        
+        .footer-column ul li a:hover {
+            opacity: 1;
+        }
+        
+        .social-links {
+            display: flex;
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            margin-right: 10px;
+            color: white;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .social-links a:hover {
+            background-color: var(--primary);
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+            }
+            
+            nav ul {
+                margin: 20px 0;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .jobs-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 5px 10px;
+            }
+            
+            .auth-buttons {
+                flex-direction: column;
+            }
+            
+            .login-btn {
+                margin: 0 0 10px 0;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .stats {
+                flex-direction: column;
+            }
+            
+            .stat-item {
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">Job<span>Board</span></div>
+                <nav>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Browse Jobs</a></li>
+                        <li><a href="#">Pages <i class="fas fa-chevron-down"></i></a></li>
+                        <li><a href="#">Blog <i class="fas fa-chevron-down"></i></a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </nav>
+                <div class="auth-buttons">
+                    <a href="#" class="login-btn">Log in</a>
+                    <a href="#" class="post-job-btn">Post A Job</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-number">4536+</div>
+                        <div class="stat-label">Jobs Listed</div>
+                    </div>
+                </div>
+                <h1>Find your Dream Job</h1>
+                <p>We provide online instant cash loans with quick approval that suit your term length</p>
+                
+                <div class="search-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Search keyword">
+                        </div>
+                        <div class="form-group">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <input type="text" placeholder="Location">
+                        </div>
+                        <div class="form-group">
+                            <i class="fas fa-briefcase"></i>
+                            <select>
+                                <option value="">Category</option>
+                                <option value="it">IT & Software</option>
+                                <option value="finance">Finance</option>
+                                <option value="marketing">Marketing</option>
+                                <option value="design">Design</option>
+                            </select>
+                        </div>
+                        <button class="search-btn">Find Job</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Job Listings -->
+    <section class="job-listings">
+        <div class="container">
+            <div class="section-title">
+                <h2>Featured Job Listings</h2>
+                <p>Discover your next career opportunity from our curated list of featured jobs</p>
+            </div>
+            
+            <div class="jobs-grid">
+                <!-- Job Card 1 -->
+                <div class="job-card">
+                    <div class="job-header">
+                        <div class="company-logo">FB</div>
+                        <div class="job-info">
+                            <h3>Frontend Developer</h3>
+                            <div class="company">Facebook Inc.</div>
+                        </div>
+                    </div>
+                    <div class="job-details">
+                        <div class="location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>New York, USA</span>
+                        </div>
+                        <div class="salary">
+                            <i class="fas fa-dollar-sign"></i>
+                            <span>$70,000 - $90,000</span>
+                        </div>
+                    </div>
+                    <div class="job-tags">
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">React</span>
+                        <span class="tag">CSS</span>
+                    </div>
+                    <a href="#" class="apply-btn" data-job-id="1">Apply Now</a>
+                </div>
+                
+                <!-- Job Card 2 -->
+                <div class="job-card">
+                    <div class="job-header">
+                        <div class="company-logo">GG</div>
+                        <div class="job-info">
+                            <h3>UX Designer</h3>
+                            <div class="company">Google LLC</div>
+                        </div>
+                    </div>
+                    <div class="job-details">
+                        <div class="location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>California, USA</span>
+                        </div>
+                        <div class="salary">
+                            <i class="fas fa-dollar-sign"></i>
+                            <span>$80,000 - $110,000</span>
+                        </div>
+                    </div>
+                    <div class="job-tags">
+                        <span class="tag">UI/UX</span>
+                        <span class="tag">Figma</span>
+                        <span class="tag">Prototyping</span>
+                    </div>
+                    <a href="#" class="apply-btn" data-job-id="2">Apply Now</a>
+                </div>
+                
+                <!-- Job Card 3 -->
+                <div class="job-card">
+                    <div class="job-header">
+                        <div class="company-logo">AM</div>
+                        <div class="job-info">
+                            <h3>Backend Engineer</h3>
+                            <div class="company">Amazon</div>
+                        </div>
+                    </div>
+                    <div class="job-details">
+                        <div class="location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Seattle, USA</span>
+                        </div>
+                        <div class="salary">
+                            <i class="fas fa-dollar-sign"></i>
+                            <span>$90,000 - $120,000</span>
+                        </div>
+                    </div>
+                    <div class="job-tags">
+                        <span class="tag">Node.js</span>
+                        <span class="tag">Python</span>
+                        <span class="tag">AWS</span>
+                    </div>
+                    <a href="#" class="apply-btn" data-job-id="3">Apply Now</a>
+                </div>
+                
+                <!-- Job Card 4 -->
+                <div class="job-card">
+                    <div class="job-header">
+                        <div class="company-logo">AP</div>
+                        <div class="job-info">
+                            <h3>iOS Developer</h3>
+                            <div class="company">Apple Inc.</div>
+                        </div>
+                    </div>
+                    <div class="job-details">
+                        <div class="location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Cupertino, USA</span>
+                        </div>
+                        <div class="salary">
+                            <i class="fas fa-dollar-sign"></i>
+                            <span>$95,000 - $130,000</span>
+                        </div>
+                    </div>
+                    <div class="job-tags">
+                        <span class="tag">Swift</span>
+                        <span class="tag">Objective-C</span>
+                        <span class="tag">Xcode</span>
+                    </div>
+                    <a href="#" class="apply-btn" data-job-id="4">Apply Now</a>
+                </div>
+                
+                <!-- Job Card 5 -->
+                <div class="job-card">
+                    <div class="job-header">
+                        <div class="company-logo">MS</div>
+                        <div class="job-info">
+                            <h3>DevOps Engineer</h3>
+                            <div class="company">Microsoft</div>
+                        </div>
+                    </div>
+                    <div class="job-details">
+                        <div class="location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Redmond, USA</span>
+                        </div>
+                        <div class="salary">
+                            <i class="fas fa-dollar-sign"></i>
+                            <span>$85,000 - $115,000</span>
+                        </div>
+                    </div>
+                    <div class="job-tags">
+                        <span class="tag">Docker</span>
+                        <span class="tag">Kubernetes</span>
+                        <span class="tag">Azure</span>
+                    </div>
+                    <a href="#" class="apply-btn" data-job-id="5">Apply Now</a>
+                </div>
+                
+                <!-- Job Card 6 -->
+                <div class="job-card">
+                    <div class="job-header">
+                        <div class="company-logo">NT</div>
+                        <div class="job-info">
+                            <h3>Data Scientist</h3>
+                            <div class="company">Netflix</div>
+                        </div>
+                    </div>
+                    <div class="job-details">
+                        <div class="location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Los Gatos, USA</span>
+                        </div>
+                        <div class="salary">
+                            <i class="fas fa-dollar-sign"></i>
+                            <span>$100,000 - $140,000</span>
+                        </div>
+                    </div>
+                    <div class="job-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">R</span>
+                        <span class="tag">Machine Learning</span>
+                    </div>
+                    <a href="#" class="apply-btn" data-job-id="6">Apply Now</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Job Detail Modal -->
+    <div class="modal" id="job-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div id="modal-job-content">
+                <!-- Content will be loaded by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>About JobBoard</h3>
+                    <p>JobBoard is a leading platform connecting talented professionals with top companies worldwide.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>For Job Seekers</h3>
+                    <ul>
+                        <li><a href="#">Browse Jobs</a></li>
+                        <li><a href="#">Browse Categories</a></li>
+                        <li><a href="#">Submit Resume</a></li>
+                        <li><a href="#">Career Advice</a></li>
+                        <li><a href="#">Saved Jobs</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>For Employers</h3>
+                    <ul>
+                        <li><a href="#">Post a Job</a></li>
+                        <li><a href="#">Browse Candidates</a></li>
+                        <li><a href="#">Pricing Plans</a></li>
+                        <li><a href="#">Recruitment Tips</a></li>
+                        <li><a href="#">Dashboard</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> 1234 Street Name, City</p>
+                    <p><i class="fas fa-phone"></i> (123) 456-7890</p>
+                    <p><i class="fas fa-envelope"></i> info@jobboard.com</p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 JobBoard. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Job data
+        const jobs = [
+            {
+                id: 1,
+                title: "Frontend Developer",
+                company: "Facebook Inc.",
+                location: "New York, USA",
+                salary: "$70,000 - $90,000",
+                description: "We are looking for a skilled Frontend Developer to join our team. You will be responsible for building the client-side of our web applications.",
+                requirements: ["3+ years of experience with JavaScript", "Experience with React.js", "Strong CSS skills", "Understanding of responsive design"],
+                tags: ["JavaScript", "React", "CSS"]
+            },
+            {
+                id: 2,
+                title: "UX Designer",
+                company: "Google LLC",
+                location: "California, USA",
+                salary: "$80,000 - $110,000",
+                description: "Join our design team to create beautiful and functional user experiences for our products.",
+                requirements: ["5+ years of UX design experience", "Proficiency in Figma", "Strong portfolio", "Understanding of user research"],
+                tags: ["UI/UX", "Figma", "Prototyping"]
+            },
+            {
+                id: 3,
+                title: "Backend Engineer",
+                company: "Amazon",
+                location: "Seattle, USA",
+                salary: "$90,000 - $120,000",
+                description: "We need a backend engineer to develop and maintain our server-side applications.",
+                requirements: ["Experience with Node.js", "Knowledge of Python", "AWS experience", "Database management skills"],
+                tags: ["Node.js", "Python", "AWS"]
+            },
+            {
+                id: 4,
+                title: "iOS Developer",
+                company: "Apple Inc.",
+                location: "Cupertino, USA",
+                salary: "$95,000 - $130,000",
+                description: "Join our team to create innovative iOS applications for our worldwide user base.",
+                requirements: ["Proficiency in Swift", "Experience with Objective-C", "Xcode expertise", "Understanding of Apple's design principles"],
+                tags: ["Swift", "Objective-C", "Xcode"]
+            },
+            {
+                id: 5,
+                title: "DevOps Engineer",
+                company: "Microsoft",
+                location: "Redmond, USA",
+                salary: "$85,000 - $115,000",
+                description: "We are seeking a DevOps engineer to improve our development and deployment processes.",
+                requirements: ["Docker containerization", "Kubernetes experience", "Azure knowledge", "CI/CD pipeline expertise"],
+                tags: ["Docker", "Kubernetes", "Azure"]
+            },
+            {
+                id: 6,
+                title: "Data Scientist",
+                company: "Netflix",
+                location: "Los Gatos, USA",
+                salary: "$100,000 - $140,000",
+                description: "Join our data team to analyze user behavior and improve our recommendation algorithms.",
+                requirements: ["Strong Python skills", "R programming knowledge", "Machine learning expertise", "Statistical analysis background"],
+                tags: ["Python", "R", "Machine Learning"]
+            }
+        ];
+
+        // DOM elements
+        const modal = document.getElementById('job-modal');
+        const modalContent = document.getElementById('modal-job-content');
+        const closeModal = document.querySelector('.close-modal');
+        const applyButtons = document.querySelectorAll('.apply-btn');
+        const searchBtn = document.querySelector('.search-btn');
+
+        // Open modal with job details
+        applyButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const jobId = parseInt(this.getAttribute('data-job-id'));
+                const job = jobs.find(job => job.id === jobId);
+                
+                if (job) {
+                    modalContent.innerHTML = `
+                        <div class="job-header">
+                            <div class="company-logo">${job.company.substring(0, 2)}</div>
+                            <div class="job-info">
+                                <h3>${job.title}</h3>
+                                <div class="company">${job.company}</div>
+                            </div>
+                        </div>
+                        <div class="job-details">
+                            <div class="location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>${job.location}</span>
+                            </div>
+                            <div class="salary">
+                                <i class="fas fa-dollar-sign"></i>
+                                <span>${job.salary}</span>
+                            </div>
+                        </div>
+                        <div class="job-description">
+                            <h4>Job Description</h4>
+                            <p>${job.description}</p>
+                        </div>
+                        <div class="job-requirements">
+                            <h4>Requirements</h4>
+                            <ul>
+                                ${job.requirements.map(req => `<li>${req}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="job-tags">
+                            ${job.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                        <button class="apply-btn" style="margin-top: 20px;">Apply For This Job</button>
+                    `;
+                    modal.style.display = 'block';
+                }
+            });
+        });
+
+        // Close modal
+        closeModal.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Search functionality
+        searchBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const keyword = document.querySelector('input[type="text"]').value.toLowerCase();
+            const location = document.querySelector('input[placeholder="Location"]').value.toLowerCase();
+            const category = document.querySelector('select').value.toLowerCase();
+            
+            if (!keyword && !location && !category) {
+                alert('Please enter at least one search criteria');
+            } else {
+                alert('Searching for jobs...');
+                // In a real application, you would filter jobs based on search criteria
+            }
+        });
+
+        // Add hover effect to job cards
+        const jobCards = document.querySelectorAll('.job-card');
+        jobCards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+                this.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.1)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.05)';
+            });
+        });
+    </script>
+</body>
+</html>
